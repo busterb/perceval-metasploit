@@ -1,0 +1,12 @@
+*.pyc
+*.pyo
+build
+dist
+.eggs
+*.egg-info
+__pycache__
+
+# Eclipse's files and directories
+.project
+.pydevproject
+.settings

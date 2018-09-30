@@ -33,7 +33,10 @@ import threading
 import dulwich.client
 import dulwich.repo
 
-from grimoirelab.toolkit.datetime import datetime_to_utc, str_to_datetime
+try:
+    from grimoirelab.toolkit.datetime import datetime_to_utc, str_to_datetime
+except:
+    from grimoirelab_toolkit.datetime import datetime_to_utc, str_to_datetime
 
 from ...backend import (Backend,
                         BackendCommand,
@@ -41,7 +44,6 @@ from ...backend import (Backend,
 from ...errors import RepositoryError, ParseError
 from ...utils import DEFAULT_DATETIME, DEFAULT_LAST_DATETIME
 
-CATEGORY_COMMIT = 'commit'
 CATEGORY_MODULE = 'module'
 CATEGORY_INVENTORY = 'inventory'
 
@@ -70,7 +72,7 @@ class Metasploit(Backend):
     """
     version = '0.10.2'
 
-    CATEGORIES = [CATEGORY_COMMIT, CATEGORY_MODULE, CATEGORY_INVENTORY]
+    CATEGORIES = [CATEGORY_MODULE, CATEGORY_INVENTORY]
 
     def __init__(self, uri, gitpath, tag=None, archive=None):
         origin = uri
@@ -79,7 +81,7 @@ class Metasploit(Backend):
         self.uri = uri
         self.gitpath = gitpath
 
-    def fetch(self, category=CATEGORY_COMMIT, from_date=DEFAULT_DATETIME, to_date=DEFAULT_LAST_DATETIME,
+    def fetch(self, category=CATEGORY_MODULE, from_date=DEFAULT_DATETIME, to_date=DEFAULT_LAST_DATETIME,
               branches=None, latest_items=False):
         """Fetch commits.
 
@@ -240,15 +242,9 @@ class Metasploit(Backend):
     @staticmethod
     def metadata_category(item):
         """Extracts the category from a Git item.
-
-        This backend generates two types of items which are
-        'commit' and 'module'.
         """
 
-        if "parents" in item:
-            category = CATEGORY_COMMIT
-        else:
-            category = CATEGORY_MODULE
+        category = CATEGORY_MODULE
 
         return category
 
